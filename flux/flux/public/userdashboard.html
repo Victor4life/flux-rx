@@ -1,0 +1,1660 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FLUX-Rx Dashboard - AI-powered Digital Pharmacy</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #f5f9ff 0%, #e8f4fd 100%);
+            color: #2c3e50;
+            overflow-x: hidden;
+        }
+
+        /* Header Styles */
+        .header {
+            background: linear-gradient(135deg, #1e3a5f 0%, #2c5f7a 100%);
+            color: white;
+            padding: 1rem 2rem;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 999;
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .logo-section {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .logo-mini {
+            width: 50px;
+            height: 50px;
+        }
+
+        .brand-text {
+            font-size: 24px;
+            font-weight: bold;
+        }
+
+        .brand-text .rx {
+            color: #52c41a;
+        }
+
+        .user-section {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .user-avatar {
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #0080ff, #52c41a);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            font-size: 18px;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+        }
+
+        .user-avatar:hover {
+            transform: scale(1.1);
+        }
+
+        .logout-btn {
+            background: rgba(255, 255, 255, 0.2);
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            color: white;
+            padding: 8px 16px;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .logout-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: translateY(-1px);
+        }
+
+        /* Main Layout */
+        .main-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem;
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 2rem;
+        }
+
+        /* Navigation Tabs */
+        .nav-tabs {
+            display: flex;
+            background: white;
+            border-radius: 15px;
+            padding: 8px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
+            margin-bottom: 2rem;
+            overflow-x: auto;
+        }
+
+        .nav-tab {
+            flex: 1;
+            padding: 15px 20px;
+            text-align: center;
+            border: none;
+            background: none;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 600;
+            color: #666;
+            transition: all 0.3s ease;
+            white-space: nowrap;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .nav-tab.active {
+            background: linear-gradient(135deg, #0080ff, #52c41a);
+            color: white;
+            box-shadow: 0 5px 15px rgba(0, 128, 255, 0.3);
+        }
+
+        .nav-tab:not(.active):hover {
+            background: #f0f8ff;
+            color: #0080ff;
+        }
+
+        .nav-icon {
+            font-size: 20px;
+        }
+
+        /* Content Sections */
+        .content-section {
+            display: none;
+            animation: fadeIn 0.5s ease-in-out;
+        }
+
+        .content-section.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Card Styles */
+        .card {
+            background: white;
+            border-radius: 20px;
+            padding: 2rem;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
+            border: 1px solid rgba(0, 0, 0, 0.05);
+            transition: all 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.12);
+        }
+
+        .card-header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 2px solid #f0f8ff;
+        }
+
+        .card-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 12px;
+            background: linear-gradient(135deg, #0080ff, #52c41a);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 24px;
+        }
+
+        .card-title {
+            font-size: 24px;
+            font-weight: 700;
+            color: #1e3a5f;
+        }
+
+        .card-subtitle {
+            color: #666;
+            font-size: 14px;
+            margin-top: 4px;
+        }
+
+        /* Form Styles */
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 8px;
+            color: #1e3a5f;
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        .form-input,
+        .form-select,
+        .form-textarea {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid #e6f3ff;
+            border-radius: 12px;
+            font-size: 16px;
+            transition: all 0.3s ease;
+            background: #fafcff;
+        }
+
+        .form-input:focus,
+        .form-select:focus,
+        .form-textarea:focus {
+            outline: none;
+            border-color: #0080ff;
+            background: white;
+            box-shadow: 0 0 15px rgba(0, 128, 255, 0.1);
+        }
+
+        .form-textarea {
+            resize: vertical;
+            min-height: 120px;
+        }
+
+        /* Button Styles */
+        .btn {
+            padding: 15px 30px;
+            border: none;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #0080ff, #52c41a);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0, 128, 255, 0.3);
+        }
+
+        .btn-secondary {
+            background: #f8f9fa;
+            color: #666;
+            border: 2px solid #e9ecef;
+        }
+
+        .btn-secondary:hover {
+            background: #e9ecef;
+            transform: translateY(-1px);
+        }
+
+        /* Drug Prediction Styles */
+        .symptom-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 1rem;
+        }
+
+        .symptom-tag {
+            background: linear-gradient(135deg, #e6f3ff, #f0f8ff);
+            color: #0080ff;
+            padding: 8px 16px;
+            border-radius: 25px;
+            font-size: 14px;
+            font-weight: 500;
+            border: 2px solid #e6f3ff;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .symptom-tag:hover,
+        .symptom-tag.active {
+            background: linear-gradient(135deg, #0080ff, #52c41a);
+            color: white;
+            border-color: #0080ff;
+            transform: translateY(-1px);
+        }
+
+        .prediction-result {
+            margin-top: 2rem;
+            padding: 2rem;
+            background: linear-gradient(135deg, #f8fcff, #e8f5e8);
+            border-radius: 15px;
+            border-left: 5px solid #52c41a;
+            display: none;
+        }
+
+        .prediction-result.show {
+            display: block;
+            animation: slideInUp 0.5s ease-out;
+        }
+
+        @keyframes slideInUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .drug-recommendation {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 12px;
+            margin-bottom: 1rem;
+            border: 1px solid #e8f5e8;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+        }
+
+        .drug-name {
+            font-size: 18px;
+            font-weight: 700;
+            color: #1e3a5f;
+            margin-bottom: 0.5rem;
+        }
+
+        .drug-details {
+            color: #666;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+        .confidence-bar {
+            margin-top: 1rem;
+            height: 6px;
+            background: #e9ecef;
+            border-radius: 3px;
+            overflow: hidden;
+        }
+
+        .confidence-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #52c41a, #0080ff);
+            border-radius: 3px;
+            transition: width 0.8s ease;
+        }
+
+        /* Pharmacy Locator Styles */
+        .map-container {
+            height: 400px;
+            background: #f8f9fa;
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 2rem;
+            border: 2px solid #e9ecef;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .map-placeholder {
+            text-align: center;
+            color: #666;
+        }
+
+        .pharmacy-list {
+            display: grid;
+            gap: 1rem;
+        }
+
+        .pharmacy-item {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 12px;
+            border: 2px solid #f0f8ff;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .pharmacy-item:hover {
+            border-color: #0080ff;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0, 128, 255, 0.1);
+        }
+
+        .pharmacy-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .pharmacy-info {
+            flex: 1;
+        }
+
+        .pharmacy-name {
+            font-size: 18px;
+            font-weight: 700;
+            color: #1e3a5f;
+            margin-bottom: 0.5rem;
+        }
+
+        .pharmacy-address {
+            color: #666;
+            font-size: 14px;
+            margin-bottom: 0.5rem;
+        }
+
+        .pharmacy-distance {
+            background: linear-gradient(135deg, #e6f3ff, #f0f8ff);
+            color: #0080ff;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            display: inline-block;
+        }
+
+        .pharmacy-status {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-top: 0.5rem;
+        }
+
+        .status-indicator {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+        }
+
+        .status-open { background: #52c41a; }
+        .status-closed { background: #ff4757; }
+
+        /* User Profile Styles */
+        .profile-grid {
+            display: grid;
+            grid-template-columns: 1fr 2fr;
+            gap: 2rem;
+        }
+
+        .profile-card {
+            text-align: center;
+        }
+
+        .profile-avatar {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #0080ff, #52c41a);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 48px;
+            font-weight: bold;
+            margin: 0 auto 1rem;
+            box-shadow: 0 8px 25px rgba(0, 128, 255, 0.3);
+        }
+
+        .profile-name {
+            font-size: 24px;
+            font-weight: 700;
+            color: #1e3a5f;
+            margin-bottom: 0.5rem;
+        }
+
+        .profile-email {
+            color: #666;
+            margin-bottom: 1rem;
+        }
+
+        .profile-stats {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+
+        .stat-item {
+            text-align: center;
+            padding: 1rem;
+            background: #f8fcff;
+            border-radius: 10px;
+            border: 1px solid #e6f3ff;
+        }
+
+        .stat-number {
+            font-size: 24px;
+            font-weight: bold;
+            color: #0080ff;
+        }
+
+        .stat-label {
+            font-size: 12px;
+            color: #666;
+            text-transform: uppercase;
+            margin-top: 0.25rem;
+        }
+
+        /* Enhanced Chatbot Styles */
+        .chatbot-container {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            z-index: 1000;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        .chatbot-button {
+            width: 70px;
+            height: 70px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #4ade80 0%, #38bdf8 100%);
+            color: white;
+            border: none;
+            box-shadow: 0 8px 25px rgba(0, 128, 255, 0.3);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 28px;
+            transition: all 0.3s ease;
+            position: relative;
+            animation: float 3s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+        }
+
+        .chatbot-button:hover {
+            transform: scale(1.1);
+            box-shadow: 0 12px 35px rgba(0, 128, 255, 0.4);
+            animation: none;
+        }
+
+        .chatbot-button::before {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #4ade80 0%, #38bdf8 100%);
+            animation: pulse-ring 2s infinite;
+            z-index: -1;
+        }
+
+        @keyframes pulse-ring {
+            0% { transform: scale(1); opacity: 0.8; }
+            100% { transform: scale(1.4); opacity: 0; }
+        }
+
+        .chatbot-window {
+            position: absolute;
+            bottom: 85px;
+            right: 0;
+            width: 380px;
+            height: 520px;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 15px 50px rgba(0, 0, 0, 0.25);
+            display: none;
+            flex-direction: column;
+            overflow: hidden;
+            border: 1px solid rgba(0, 128, 255, 0.1);
+            transform: scale(0.9);
+            opacity: 0;
+            transition: all 0.3s ease;
+        }
+
+        .chatbot-window.show {
+            display: flex;
+            transform: scale(1);
+            opacity: 1;
+        }
+
+        .chatbot-header {
+            background: linear-gradient(135deg, #4ade80 0%, #38bdf8 100%);
+            color: white;
+            padding: 20px;
+            display: flex;
+            align-items: center;
+            position: relative;
+        }
+
+        .chatbot-avatar {
+            width: 45px;
+            height: 45px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 15px;
+            font-size: 20px;
+        }
+
+        .chatbot-info {
+            flex: 1;
+        }
+
+        .chatbot-title {
+            font-weight: 700;
+            font-size: 18px;
+            margin-bottom: 4px;
+        }
+
+        .chatbot-status {
+            font-size: 12px;
+            opacity: 0.9;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            background: #52c41a;
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        .chatbot-close {
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            color: white;
+            cursor: pointer;
+            font-size: 18px;
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+
+        .chatbot-close:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: rotate(90deg);
+        }
+
+        .chatbot-messages {
+            flex: 1;
+            padding: 20px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            background: linear-gradient(135deg, #fafcff 0%, #f0f8ff 100%);
+            gap: 15px;
+        }
+
+        .chatbot-messages::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .chatbot-messages::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        .chatbot-messages::-webkit-scrollbar-thumb {
+            background: rgba(0, 128, 255, 0.3);
+            border-radius: 3px;
+        }
+
+        .message {
+            max-width: 85%;
+            padding: 12px 16px;
+            border-radius: 18px;
+            line-height: 1.5;
+            font-size: 14px;
+            position: relative;
+            animation: messageSlide 0.3s ease-out;
+        }
+
+        @keyframes messageSlide {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .bot-message {
+            background: white;
+            border: 1px solid #e6f3ff;
+            align-self: flex-start;
+            color: #2c3e50;
+            border-bottom-left-radius: 6px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+        }
+
+        .user-message {
+            background: linear-gradient(135deg, #4ade80 0%, #38bdf8 100%);
+            color: white;
+            align-self: flex-end;
+            border-bottom-right-radius: 6px;
+            box-shadow: 0 2px 10px rgba(0, 128, 255, 0.2);
+        }
+
+        .message-time {
+            font-size: 10px;
+            opacity: 0.7;
+            margin-top: 4px;
+            text-align: right;
+        }
+
+        .typing-indicator {
+            display: none;
+            align-self: flex-start;
+            padding: 12px 16px;
+            background: white;
+            border-radius: 18px;
+            border: 1px solid #e6f3ff;
+            border-bottom-left-radius: 6px;
+        }
+
+        .typing-indicator.show {
+            display: block;
+            animation: messageSlide 0.3s ease-out;
+        }
+
+        .typing-dots {
+            display: flex;
+            gap: 4px;
+            align-items: center;
+        }
+
+        .typing-dot {
+            width: 8px;
+            height: 8px;
+            background: #38bdf8;
+            border-radius: 50%;
+            animation: typing 1.4s infinite;
+        }
+
+        .typing-dot:nth-child(2) { animation-delay: 0.2s; }
+        .typing-dot:nth-child(3) { animation-delay: 0.4s; }
+
+        @keyframes typing {
+            0%, 60%, 100% { transform: translateY(0); opacity: 0.4; }
+            30% { transform: translateY(-10px); opacity: 1; }
+        }
+
+        .chatbot-input-container {
+            padding: 20px;
+            border-top: 1px solid #e6f3ff;
+            background: white;
+        }
+
+        .chatbot-input {
+            display: flex;
+            gap: 12px;
+            align-items: center;
+        }
+
+        .chatbot-input input {
+            flex: 1;
+            padding: 12px 16px;
+            border: 2px solid #e6f3ff;
+            border-radius: 25px;
+            outline: none;
+            font-size: 14px;
+            background: #fafcff;
+            transition: all 0.3s ease;
+        }
+
+        .chatbot-input input:focus {
+            border-color: #38bdf8;
+            background: white;
+            box-shadow: 0 0 10px rgba(56, 189, 248, 0.1);
+        }
+
+        .chatbot-send {
+            background: linear-gradient(135deg, #4ade80 0%, #38bdf8 100%);
+            color: white;
+            border: none;
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(56, 189, 248, 0.3);
+        }
+
+        .chatbot-send:hover {
+            transform: scale(1.1);
+            box-shadow: 0 6px 20px rgba(56, 189, 248, 0.4);
+        }
+
+        .chatbot-send:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .quick-actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 15px;
+        }
+
+        .quick-action {
+            background: #f0f8ff;
+            color: #38bdf8;
+            padding: 8px 12px;
+            border-radius: 15px;
+            font-size: 12px;
+            cursor: pointer;
+            border: 1px solid #e6f3ff;
+            transition: all 0.3s ease;
+        }
+
+        .quick-action:hover {
+            background: #38bdf8;
+            color: white;
+            transform: translateY(-1px);
+        }
+
+        /* Mobile Responsiveness */
+        @media (max-width: 768px) {
+            .main-container {
+                padding: 1rem;
+            }
+
+            .profile-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .nav-tabs {
+                padding: 4px;
+            }
+
+            .nav-tab {
+                padding: 12px 8px;
+                font-size: 12px;
+                flex-direction: column;
+                gap: 4px;
+            }
+
+            .nav-icon {
+                font-size: 16px;
+            }
+
+            .card {
+                padding: 1.5rem;
+            }
+
+            .card-header {
+                flex-direction: column;
+                align-items: flex-start;
+                text-align: left;
+            }
+
+            .header-content {
+                padding: 0 1rem;
+            }
+
+            .brand-text {
+                font-size: 18px;
+            }
+
+            .chatbot-container {
+                bottom: 20px;
+                right: 20px;
+            }
+
+            .chatbot-button {
+                width: 60px;
+                height: 60px;
+                font-size: 24px;
+            }
+
+            .chatbot-window {
+                width: calc(100vw - 40px);
+                height: 70vh;
+                right: -10px;
+                bottom: 70px;
+            }
+
+            .chatbot-messages {
+                padding: 15px;
+            }
+
+            .chatbot-input-container {
+                padding: 15px;
+            }
+        }
+
+        .loading {
+            opacity: 0.6;
+            pointer-events: none;
+        }
+
+        .error-message {
+            color: #ff4757;
+            font-size: 14px;
+            margin-top: 0.5rem;
+        }
+
+        .success-message {
+            color: #52c41a;
+            font-size: 14px;
+            margin-top: 0.5rem;
+        }
+
+        /* Accessibility */
+        .sr-only {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            padding: 0;
+            margin: -1px;
+            overflow: hidden;
+            clip: rect(0, 0, 0, 0);
+            white-space: nowrap;
+            border: 0;
+        }
+
+        /* Focus states for accessibility */
+        *:focus-visible {
+            outline: 2px solid #0080ff;
+            outline-offset: 2px;
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="header-content">
+            <div class="logo-section">
+                <svg class="logo-mini" viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M10 30 L40 30 L50 20 L60 30 L50 40 L40 30 Z" fill="url(#miniGradient)"/>
+                    <rect x="38" y="25" width="14" height="4" rx="2" fill="white"/>
+                    <rect x="43" y="20" width="4" height="14" rx="2" fill="white"/>
+                    <defs>
+                        <linearGradient id="miniGradient">
+                            <stop offset="0%" style="stop-color:#0080ff"/>
+                            <stop offset="100%" style="stop-color:#52c41a"/>
+                        </linearGradient>
+                    </defs>
+                </svg>
+                <div class="brand-text">
+                    FLUX<span class="rx">-Rx</span>
+                </div>
+            </div>
+            <div class="user-section">
+                <div class="user-avatar" id="userAvatar" title="User Profile">
+                    JD
+                </div>
+                <button class="logout-btn" onclick="logout()">Logout</button>
+            </div>
+        </div>
+    </header>
+
+    <main class="main-container">
+        <!-- Navigation Tabs -->
+        <nav class="nav-tabs" role="tablist">
+            <button class="nav-tab active" onclick="switchTab('overview')" role="tab" aria-selected="true">
+                <span class="nav-icon">🏠</span>
+                <span>Overview</span>
+            </button>
+            <button class="nav-tab" onclick="switchTab('prediction')" role="tab">
+                <span class="nav-icon">💊</span>
+                <span>Drug Prediction</span>
+            </button>
+            <button class="nav-tab" onclick="switchTab('pharmacy')" role="tab">
+                <span class="nav-icon">📍</span>
+                <span>Find Pharmacy</span>
+            </button>
+            <button class="nav-tab" onclick="switchTab('profile')" role="tab">
+                <span class="nav-icon">👤</span>
+                <span>Profile</span>
+            </button>
+        </nav>
+
+        <!-- Overview Section -->
+        <section class="content-section active" id="overview">
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-icon">🏠</div>
+                    <div>
+                        <h1 class="card-title">Welcome back, John!</h1>
+                        <p class="card-subtitle">Your health companion is ready to assist you</p>
+                    </div>
+                </div>
+                
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1.5rem; margin-top: 2rem;">
+                    <div class="stat-item" style="cursor: pointer;" onclick="switchTab('prediction')">
+                        <div class="stat-number">12</div>
+                        <div class="stat-label">Consultations</div>
+                    </div>
+                    <div class="stat-item" style="cursor: pointer;" onclick="switchTab('pharmacy')">
+                        <div class="stat-number">5</div>
+                        <div class="stat-label">Nearby Pharmacies</div>
+                    </div>
+                    <div class="stat-item" style="cursor: pointer;" onclick="toggleChatbot()">
+                        <div class="stat-number">24/7</div>
+                        <div class="stat-label">AI Support</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number">98%</div>
+                        <div class="stat-label">Accuracy Rate</div>
+                    </div>
+                </div>
+
+                <div style="margin-top: 2rem;">
+                    <h3 style="color: #1e3a5f; margin-bottom: 1rem;">Quick Actions</h3>
+                    <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
+                        <button class="btn btn-primary" onclick="switchTab('prediction')">
+                            💊 Get Drug Recommendation
+                        </button>
+                        <button class="btn btn-secondary" onclick="switchTab('pharmacy')">
+                            📍 Find Nearest Pharmacy
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Drug Prediction Section -->
+        <section class="content-section" id="prediction">
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-icon">💊</div>
+                    <div>
+                        <h2 class="card-title">AI Drug Prediction</h2>
+                        <p class="card-subtitle">Describe your symptoms for personalized recommendations</p>
+                    </div>
+                </div>
+
+                <form id="predictionForm">
+                    <div class="form-group">
+                        <label class="form-label" for="symptoms">Describe Your Symptoms</label>
+                        <textarea 
+                            id="symptoms" 
+                            class="form-textarea" 
+                            placeholder="Please describe your symptoms in detail (e.g., headache, fever, nausea, body aches...)"
+                            required
+                        ></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Common Symptoms (Click to add)</label>
+                        <div class="symptom-tags">
+                            <span class="symptom-tag" onclick="toggleSymptom(this, 'headache')">Headache</span>
+                            <span class="symptom-tag" onclick="toggleSymptom(this, 'fever')">Fever</span>
+                            <span class="symptom-tag" onclick="toggleSymptom(this, 'cough')">Cough</span>
+                            <span class="symptom-tag" onclick="toggleSymptom(this, 'sore throat')">Sore Throat</span>
+                            <span class="symptom-tag" onclick="toggleSymptom(this, 'nausea')">Nausea</span>
+                            <span class="symptom-tag" onclick="toggleSymptom(this, 'fatigue')">Fatigue</span>
+                            <span class="symptom-tag" onclick="toggleSymptom(this, 'muscle pain')">Muscle Pain</span>
+                            <span class="symptom-tag" onclick="toggleSymptom(this, 'runny nose')">Runny Nose</span>
+                        </div>
+                    </div>
+
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                        <div class="form-group">
+                            <label class="form-label" for="age">Age</label>
+                            <input type="number" id="age" class="form-input" min="1" max="120" placeholder="Your age" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="severity">Symptom Severity</label>
+                            <select id="severity" class="form-select" required>
+                                <option value="">Select severity</option>
+                                <option value="mild">Mild</option>
+                                <option value="moderate">Moderate</option>
+                                <option value="severe">Severe</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary" style="width: 100%;">
+                        🔍 Analyze Symptoms & Get Recommendations
+                    </button>
+                </form>
+
+                <div class="prediction-result" id="predictionResult">
+                    <h3 style="color: #1e3a5f; margin-bottom: 1.5rem;">🎯 Recommended Medications</h3>
+                    <div id="drugRecommendations"></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Pharmacy Locator Section -->
+        <section class="content-section" id="pharmacy">
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-icon">📍</div>
+                    <div>
+                        <h2 class="card-title">Pharmacy Locator</h2>
+                        <p class="card-subtitle">Find nearby pharmacies with real-time availability</p>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="location">Your Location</label>
+                    <input 
+                        type="text" 
+                        id="location" 
+                        class="form-input" 
+                        placeholder="Enter your address or use current location"
+                    >
+                </div>
+
+                <div style="display: flex; gap: 1rem; margin-bottom: 2rem;">
+                    <button class="btn btn-primary" onclick="findPharmacies()">
+                        📍 Find Pharmacies
+                    </button>
+                    <button class="btn btn-secondary" onclick="getCurrentLocation()">
+                        📱 Use Current Location
+                    </button>
+                </div>
+
+                <div class="map-container">
+                    <div class="map-placeholder">
+                        <i class="fas fa-map-marker-alt" style="font-size: 48px; color: #0080ff; margin-bottom: 1rem;"></i>
+                        <h3>Interactive Map</h3>
+                        <p>Pharmacies will appear here when you search</p>
+                    </div>
+                </div>
+
+                <div class="pharmacy-list" id="pharmacyList">
+                    <!-- Sample pharmacy data -->
+                    <div class="pharmacy-item">
+                        <div class="pharmacy-header">
+                            <div class="pharmacy-info">
+                                <div class="pharmacy-name">HealthFirst Pharmacy</div>
+                                <div class="pharmacy-address">123 Main Street, Downtown</div>
+                                <div class="pharmacy-distance">0.8 km away</div>
+                            </div>
+                        </div>
+                        <div class="pharmacy-status">
+                            <div class="status-indicator status-open"></div>
+                            <span>Open until 10:00 PM</span>
+                        </div>
+                    </div>
+
+                    <div class="pharmacy-item">
+                        <div class="pharmacy-header">
+                            <div class="pharmacy-info">
+                                <div class="pharmacy-name">MedPlus Central</div>
+                                <div class="pharmacy-address">456 Oak Avenue, City Center</div>
+                                <div class="pharmacy-distance">1.2 km away</div>
+                            </div>
+                        </div>
+                        <div class="pharmacy-status">
+                            <div class="status-indicator status-open"></div>
+                            <span>Open 24/7</span>
+                        </div>
+                    </div>
+
+                    <div class="pharmacy-item">
+                        <div class="pharmacy-header">
+                            <div class="pharmacy-info">
+                                <div class="pharmacy-name">Quick Care Drugs</div>
+                                <div class="pharmacy-address">789 Pine Street, Westside</div>
+                                <div class="pharmacy-distance">2.1 km away</div>
+                            </div>
+                        </div>
+                        <div class="pharmacy-status">
+                            <div class="status-indicator status-closed"></div>
+                            <span>Closed - Opens at 8:00 AM</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Profile Section -->
+        <section class="content-section" id="profile">
+            <div class="profile-grid">
+                <div class="card profile-card">
+                    <div class="profile-avatar">JD</div>
+                    <div class="profile-name">John Doe</div>
+                    <div class="profile-email">john.doe@email.com</div>
+                    <button class="btn btn-primary">Edit Profile</button>
+                    
+                    <div class="profile-stats">
+                        <div class="stat-item">
+                            <div class="stat-number">12</div>
+                            <div class="stat-label">Consultations</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-number">3</div>
+                            <div class="stat-label">Prescriptions</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-number">8</div>
+                            <div class="stat-label">Pharmacy Visits</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-number">2</div>
+                            <div class="stat-label">Years Active</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-icon">⚙️</div>
+                        <div>
+                            <h3 class="card-title">Account Settings</h3>
+                            <p class="card-subtitle">Manage your profile and preferences</p>
+                        </div>
+                    </div>
+
+                    <form id="profileForm">
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                            <div class="form-group">
+                                <label class="form-label" for="firstName">First Name</label>
+                                <input type="text" id="firstName" class="form-input" value="John">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label" for="lastName">Last Name</label>
+                                <input type="text" id="lastName" class="form-input" value="Doe">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label" for="email">Email Address</label>
+                            <input type="email" id="email" class="form-input" value="john.doe@email.com">
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label" for="phone">Phone Number</label>
+                            <input type="tel" id="phone" class="form-input" placeholder="+1 (555) 123-4567">
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label" for="dateOfBirth">Date of Birth</label>
+                            <input type="date" id="dateOfBirth" class="form-input">
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label" for="address">Address</label>
+                            <textarea id="address" class="form-textarea" placeholder="Enter your full address"></textarea>
+                        </div>
+
+                        <div style="display: flex; gap: 1rem;">
+                            <button type="submit" class="btn btn-primary">Save Changes</button>
+                            <button type="button" class="btn btn-secondary">Cancel</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Enhanced Chatbot -->
+    <div class="chatbot-container">
+        <button class="chatbot-button" onclick="toggleChatbot()">
+            <i class="fas fa-comment-dots"></i>
+        </button>
+        
+        <div class="chatbot-window" id="chatbotWindow">
+            <div class="chatbot-header">
+                <div class="chatbot-avatar">
+                    <i class="fas fa-robot"></i>
+                </div>
+                <div class="chatbot-info">
+                    <div class="chatbot-title">FLUX-Rx Assistant</div>
+                    <div class="chatbot-status">
+                        <div class="status-dot"></div>
+                        <span>Online & Ready to Help</span>
+                    </div>
+                </div>
+                <button class="chatbot-close" onclick="toggleChatbot()">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            
+            <div class="chatbot-messages" id="chatbotMessages">
+                <div class="quick-actions">
+                    <div class="quick-action" onclick="sendQuickMessage('What are common cold symptoms?')">Cold Symptoms</div>
+                    <div class="quick-action" onclick="sendQuickMessage('Find pharmacy near me')">Find Pharmacy</div>
+                    <div class="quick-action" onclick="sendQuickMessage('Drug interactions')">Drug Info</div>
+                    <div class="quick-action" onclick="sendQuickMessage('Emergency contacts')">Emergency</div>
+                </div>
+                
+                <div class="message bot-message">
+                    Hi there! 👋 I'm your FLUX-Rx AI assistant. How can I help you today?
+                    <div class="message-time">Just now</div>
+                </div>
+                
+                <div class="typing-indicator" id="typingIndicator">
+                    <div class="typing-dots">
+                        <div class="typing-dot"></div>
+                        <div class="typing-dot"></div>
+                        <div class="typing-dot"></div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="chatbot-input-container">
+                <div class="chatbot-input">
+                    <input 
+                        type="text" 
+                        id="chatbotInput" 
+                        placeholder="Type your message..." 
+                        onkeypress="handleChatKeyPress(event)"
+                        maxlength="500"
+                    >
+                    <button class="chatbot-send" onclick="sendMessage()" id="sendButton">
+                        <i class="fas fa-paper-plane"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Global variables
+        let currentTab = 'overview';
+        let selectedSymptoms = new Set();
+        let chatbotOpen = false;
+
+        // Tab switching functionality
+        function switchTab(tabName) {
+            // Hide all content sections
+            document.querySelectorAll('.content-section').forEach(section => {
+                section.classList.remove('active');
+            });
+            
+            // Remove active class from all tabs
+            document.querySelectorAll('.nav-tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            
+            // Show selected content section
+            document.getElementById(tabName).classList.add('active');
+            
+            // Add active class to selected tab
+            event.target.classList.add('active');
+            
+            currentTab = tabName;
+        }
+
+        // Symptom tag functionality
+        function toggleSymptom(element, symptom) {
+            element.classList.toggle('active');
+            
+            if (selectedSymptoms.has(symptom)) {
+                selectedSymptoms.delete(symptom);
+            } else {
+                selectedSymptoms.add(symptom);
+            }
+            
+            // Update the symptoms textarea
+            updateSymptomsTextarea();
+        }
+
+        function updateSymptomsTextarea() {
+            const textarea = document.getElementById('symptoms');
+            const currentText = textarea.value.trim();
+            const symptomsArray = Array.from(selectedSymptoms);
+            
+            if (symptomsArray.length > 0) {
+                const symptomsText = symptomsArray.join(', ');
+                if (currentText && !currentText.includes(symptomsText)) {
+                    textarea.value = currentText + (currentText.endsWith('.') ? ' ' : '. ') + 'Symptoms include: ' + symptomsText + '.';
+                } else if (!currentText) {
+                    textarea.value = 'I am experiencing: ' + symptomsText + '.';
+                }
+            }
+        }
+
+        // Drug prediction form submission
+        document.getElementById('predictionForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const symptoms = document.getElementById('symptoms').value;
+            const age = document.getElementById('age').value;
+            const severity = document.getElementById('severity').value;
+            
+            if (!symptoms || !age || !severity) {
+                alert('Please fill in all required fields.');
+                return;
+            }
+            
+            // Show loading state
+            const submitBtn = e.target.querySelector('button[type="submit"]');
+            const originalText = submitBtn.innerHTML;
+            submitBtn.innerHTML = '🔄 Analyzing...';
+            submitBtn.disabled = true;
+            
+            // Simulate API call
+            setTimeout(() => {
+                showDrugRecommendations(symptoms, age, severity);
+                submitBtn.innerHTML = originalText;
+                submitBtn.disabled = false;
+            }, 2000);
+        });
+
+        function showDrugRecommendations(symptoms, age, severity) {
+            const recommendations = generateMockRecommendations(symptoms, age, severity);
+            const resultDiv = document.getElementById('predictionResult');
+            const recommendationsDiv = document.getElementById('drugRecommendations');
+            
+            recommendationsDiv.innerHTML = recommendations.map(drug => `
+                <div class="drug-recommendation">
+                    <div class="drug-name">${drug.name}</div>
+                    <div class="drug-details">
+                        <strong>Dosage:</strong> ${drug.dosage}<br>
+                        <strong>Frequency:</strong> ${drug.frequency}<br>
+                        <strong>Duration:</strong> ${drug.duration}<br>
+                        <strong>Notes:</strong> ${drug.notes}
+                    </div>
+                    <div class="confidence-bar">
+                        <div class="confidence-fill" style="width: ${drug.confidence}%"></div>
+                    </div>
+                    <div style="text-align: right; margin-top: 0.5rem; font-size: 12px; color: #666;">
+                        ${drug.confidence}% confidence
+                    </div>
+                </div>
+            `).join('');
+            
+            resultDiv.classList.add('show');
+        }
+
+        function generateMockRecommendations(symptoms, age, severity) {
+            // Mock recommendation logic
+            const commonRecommendations = [
+                {
+                    name: "Paracetamol (Acetaminophen)",
+                    dosage: "500mg",
+                    frequency: "Every 6 hours",
+                    duration: "3-5 days",
+                    notes: "For pain relief and fever reduction. Take with food if stomach upset occurs.",
+                    confidence: 92
+                },
+                {
+                    name: "Ibuprofen",
+                    dosage: "400mg",
+                    frequency: "Every 8 hours",
+                    duration: "3-7 days",
+                    notes: "Anti-inflammatory and pain relief. Not recommended if you have stomach ulcers.",
+                    confidence: 87
+                }
+            ];
+
+            if (symptoms.toLowerCase().includes('cough')) {
+                commonRecommendations.push({
+                    name: "Dextromethorphan (Cough Syrup)",
+                    dosage: "15ml",
+                    frequency: "Every 4-6 hours",
+                    duration: "7-10 days",
+                    notes: "For dry cough suppression. Avoid if you have a productive cough.",
+                    confidence: 78
+                });
+            }
+
+            return commonRecommendations;
+        }
+
+        // Pharmacy locator functionality
+        function findPharmacies() {
+            const location = document.getElementById('location').value;
+            if (!location) {
+                alert('Please enter a location.');
+                return;
+            }
+            
+            // Mock pharmacy search
+            console.log('Finding pharmacies near:', location);
+            // In a real app, this would make an API call to find nearby pharmacies
+        }
+
+        function getCurrentLocation() {
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(function(position) {
+                    const lat = position.coords.latitude;
+                    const lng = position.coords.longitude;
+                    document.getElementById('location').value = `Current Location (${lat.toFixed(4)}, ${lng.toFixed(4)})`;
+                }, function(error) {
+                    alert('Unable to get your location. Please enter manually.');
+                });
+            } else {
+                alert('Geolocation is not supported by this browser.');
+            }
+        }
+
+        // Profile form submission
+        document.getElementById('profileForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            // Show success message
+            const submitBtn = e.target.querySelector('button[type="submit"]');
+            const originalText = submitBtn.innerHTML;
+            submitBtn.innerHTML = '✅ Saved!';
+            submitBtn.style.background = '#52c41a';
+            
+            setTimeout(() => {
+                submitBtn.innerHTML = originalText;
+                submitBtn.style.background = '';
+            }, 2000);
+        });
+
+        // Chatbot functionality
+        function toggleChatbot() {
+            const chatbotWindow = document.getElementById('chatbotWindow');
+            chatbotOpen = !chatbotOpen;
+            
+            if (chatbotOpen) {
+                chatbotWindow.classList.add('show');
+                document.getElementById('chatbotInput').focus();
+            } else {
+                chatbotWindow.classList.remove('show');
+            }
+        }
+
+        function sendMessage() {
+            const input = document.getElementById('chatbotInput');
+            const message = input.value.trim();
+            
+            if (!message) return;
+            
+            // Add user message
+            addMessage(message, 'user');
+            input.value = '';
+            
+            // Show typing indicator
+            showTyping();
+            
+            // Simulate bot response
+            setTimeout(() => {
+                hideTyping();
+                const botResponse = generateBotResponse(message);
+                addMessage(botResponse, 'bot');
+            }, 1000 + Math.random() * 2000);
+        }
+
+        function sendQuickMessage(message) {
+            document.getElementById('chatbotInput').value = message;
+            sendMessage();
+        }
+
+        function addMessage(text, sender) {
+            const messagesContainer = document.getElementById('chatbotMessages');
+            const messageDiv = document.createElement('div');
+            const currentTime = new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+            
+            messageDiv.className = `message ${sender}-message`;
+            messageDiv.innerHTML = `
+                ${text}
+                <div class="message-time">${currentTime}</div>
+            `;
+            
+            messagesContainer.appendChild(messageDiv);
+            messagesContainer.scrollTop = messagesContainer.scrollHeight;
+        }
+
+        function showTyping() {
+            document.getElementById('typingIndicator').classList.add('show');
+            const messagesContainer = document.getElementById('chatbotMessages');
+            messagesContainer.scrollTop = messagesContainer.scrollHeight;
+        }
+
+        function hideTyping() {
+            document.getElementById('typingIndicator').classList.remove('show');
+        }
+
+        function generateBotResponse(message) {
+            const lowerMessage = message.toLowerCase();
+            
+            if (lowerMessage.includes('symptom')) {
+                return "I can help you understand symptoms! Common symptoms include headaches, fever, cough, and fatigue. Would you like me to help you get a drug recommendation based on your specific symptoms?";
+            }
+            
+            if (lowerMessage.includes('pharmacy') || lowerMessage.includes('find')) {
+                return "I can help you find nearby pharmacies! You can use the 'Find Pharmacy' section to locate pharmacies near you with real-time availability information.";
+            }
+            
+            if (lowerMessage.includes('drug') || lowerMessage.includes('medication')) {
+                return "For drug information and recommendations, please use our AI Drug Prediction feature. It analyzes your symptoms and provides personalized medication suggestions with confidence scores.";
+            }
+            
+            if (lowerMessage.includes('emergency')) {
+                return "🚨 For medical emergencies, please contact:\n• Emergency Services: 911\n• Poison Control: 1-800-222-1222\n• Your Doctor's Emergency Line\n\nIf this is urgent, please seek immediate medical attention!";
+            }
+            
+            if (lowerMessage.includes('hello') || lowerMessage.includes('hi') || lowerMessage.includes('hey')) {
+                return "Hello! I'm here to help with your health and pharmacy needs. You can ask me about symptoms, medications, or finding nearby pharmacies. What would you like to know?";
+            }
+            
+            return "I'm here to help with your health questions! I can assist with symptom analysis, drug information, and finding pharmacies. You can also use our specialized tools in the dashboard for more detailed assistance. What specific information are you looking for?";
+        }
+
+        function handleChatKeyPress(event) {
+            if (event.key === 'Enter' && !event.shiftKey) {
+                event.preventDefault();
+                sendMessage();
+            }
+        }
+
+        // Logout functionality
+        function logout() {
+            if (confirm('Are you sure you want to logout?')) {
+                // In a real app, this would clear session and redirect
+                alert('Logged out successfully!');
+                // window.location.href = '/login';
+            }
+        }
+
+        // Initialize the app
+        document.addEventListener('DOMContentLoaded', function() {
+            // Set initial active tab
+            document.querySelector('.nav-tab.active').setAttribute('aria-selected', 'true');
+            
+            // Add accessibility labels
+            document.querySelectorAll('.nav-tab').forEach((tab, index) => {
+                tab.setAttribute('tabindex', index === 0 ? '0' : '-1');
+            });
+            
+            console.log('FLUX-Rx Dashboard loaded successfully!');
+        });
+    </script>
+</body>
+</html>

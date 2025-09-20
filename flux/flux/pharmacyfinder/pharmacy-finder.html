@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Find Nearest Pharmacy - FLUX-Rx</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="./pharmacy.css">
+    <script defer src="./pharmacy-finder.js"></script>
+</head>
+<body>
+    <header>
+        <div class="logo">
+            <div class="logo-icon">
+                <i class="fas fa-prescription-bottle" style="color: #4ade80; font-size: 24px;"></i>
+            </div>
+            <div class="logo-text">FLUX-Rx</div>
+        </div>
+        <h1>Find Nearest Pharmacy</h1>
+        <p class="subtitle">Locate pharmacies near you</p>
+        
+        <div class="search-box">
+            <input type="text" id="locationInput" placeholder="Enter your location or zip code">
+            <button id="searchButton"><i class="fas fa-search"></i> Search</button>
+        </div>
+    </header>
+
+    <div class="container">
+        <div class="content">
+            <div class="map-container">
+                <div class="map-placeholder">
+                    <i class="fas fa-map-marker-alt"></i>
+                    <p>Interactive map will appear here after search</p>
+                    <p class="pharmacy-distance"><i class="fas fa-location-dot"></i> Your location will be shown here</p>
+                </div>
+            </div>
+            
+            <div class="pharmacy-list" id="pharmacyList">
+                <!-- Pharmacy cards will be generated here -->
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <p>© 2023 FLUX-Rx - AI-powered Digital Pharmacy. All rights reserved.</p>
+    </footer>
+
+    <div class="notification" id="notification">
+        <span id="notificationText"></span>
+    </div>
+</body>
+</html>

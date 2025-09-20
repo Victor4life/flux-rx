@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FLUX-Rx Chat Bot</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script defer src="./userdashboard.js"></script>
+    <style>
+        /* Chat Bot Container */
+        .chatbot-container {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            z-index: 1000;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        /* Chat Button */
+        .chatbot-button {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #4ade80 0%, #38bdf8 100%);
+            color: white;
+            border: none;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            transition: transform 0.3s;
+        }
+
+        .chatbot-button:hover {
+            transform: scale(1.1);
+        }
+
+        /* Chat Window */
+        .chatbot-window {
+            position: absolute;
+            bottom: 70px;
+            right: 0;
+            width: 320px;
+            height: 400px;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 5px 25px rgba(0, 0, 0, 0.2);
+            display: none;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        /* Chat Header */
+        .chatbot-header {
+            background: linear-gradient(135deg, #4ade80 0%, #38bdf8 100%);
+            color: white;
+            padding: 15px;
+            display: flex;
+            align-items: center;
+        }
+
+        .chatbot-avatar {
+            width: 36px;
+            height: 36px;
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 10px;
+        }
+
+        .chatbot-title {
+            font-weight: 600;
+            font-size: 16px;
+        }
+
+        .chatbot-close {
+            margin-left: auto;
+            background: none;
+            border: none;
+            color: white;
+            cursor: pointer;
+            font-size: 18px;
+        }
+
+        /* Chat Messages */
+        .chatbot-messages {
+            flex-grow: 1;
+            padding: 15px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            background: #fafafa;
+        }
+
+        .message {
+            max-width: 75%;
+            padding: 10px 14px;
+            border-radius: 18px;
+            margin-bottom: 10px;
+            line-height: 1.4;
+            font-size: 14px;
+        }
+
+        .bot-message {
+            background: white;
+            border: 1px solid #e0e0e0;
+            align-self: flex-start;
+            border-bottom-left-radius: 4px;
+        }
+
+        .user-message {
+            background: linear-gradient(135deg, #4ade80 0%, #38bdf8 100%);
+            color: white;
+            align-self: flex-end;
+            border-bottom-right-radius: 4px;
+        }
+
+        /* Chat Input */
+        .chatbot-input {
+            display: flex;
+            padding: 15px;
+            border-top: 1px solid #e0e0e0;
+            background: white;
+        }
+
+        .chatbot-input input {
+            flex-grow: 1;
+            padding: 10px 15px;
+            border: 1px solid #e0e0e0;
+            border-radius: 20px;
+            outline: none;
+            font-size: 14px;
+        }
+
+        .chatbot-input input:focus {
+            border-color: #38bdf8;
+        }
+
+        .chatbot-send {
+            background: linear-gradient(135deg, #4ade80 0%, #38bdf8 100%);
+            color: white;
+            border: none;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            margin-left: 8px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+    </style>
+</head>
+<body>
+    <!-- Chat Bot Container -->
+    <div class="chatbot-container">
+        <button class="chatbot-button">
+            <i class="fas fa-comment-dots"></i>
+        </button>
+        <div class="chatbot-window">
+            <div class="chatbot-header">
+                <div class="chatbot-avatar">
+                    <i class="fas fa-robot"></i>
+                </div>
+                <div class="chatbot-title">FLUX-Rx Assistant</div>
+                <button class="chatbot-close">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="chatbot-messages">
+                <div class="message bot-message">Hi there! 👋 How can I help you today?</div>
+            </div>
+            <div class="chatbot-input">
+                <input type="text" placeholder="Type your message...">
+                <button class="chatbot-send">
+                    <i class="fas fa-paper-plane"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
