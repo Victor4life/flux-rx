@@ -4,12 +4,17 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>FLUX-RX</title>
-    <link rel="stylesheet" href="output.css" />
+
+    <!-- Tailwind via CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Font Awesome -->
     <link
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
     />
 
+    <!-- Google Fonts -->
     <style>
       @import url("https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap");
 
@@ -22,7 +27,9 @@
         min-height: 100vh;
         display: flex;
         flex-direction: column;
-        background-image: url("public/pharmacity-image.jpg");
+        background-image: url("pharmacity-image.jpg"); /* ✅ fixed path */
+        background-size: cover;
+        background-position: center;
       }
 
       .logo-container {
@@ -86,40 +93,34 @@
   </head>
 
   <body>
+    <!-- Background overlay -->
     <img
-      src="public/pharmacity-image.jpg"
-      class="grayscale-0"
-      style="
-        position: absolute;
-        width: 100%;
-        background-color: blue;
-        opacity: 0.3;
-        filter: grayscale(70%);
-      "
+      src="pharmacity-image.jpg"
+      alt="background"
+      class="absolute w-full h-full object-cover opacity-30 grayscale"
     />
-    <header class="container mx-auto px-4 py-8">
+
+    <!-- Header -->
+    <header class="container mx-auto px-4 py-8 relative z-10">
       <div class="flex justify-between items-center">
         <div class="flex items-center space-x-4 logo-container">
           <div
             class="w-64 h-16 rounded-2xl bg-white flex items-center justify-center shadow-lg"
           >
-            <img src="public/company logo.jpg" alt="" />
+            <img src="company logo.jpg" alt="Company Logo" class="h-12" />
           </div>
-          <!-- <h1 class="text-3xl font-bold hidden md:block">FLUX-<span class="text-blue-200">Rx</span></h1> -->
         </div>
-        <a href="./registration.html" class="sign-in-btn">
+        <a href="registration.html" class="sign-in-btn">
           <i class="fas fa-sign-in-alt"></i> Sign In
         </a>
       </div>
     </header>
 
     <!-- Main Content -->
-    <main class="flex-grow flex items-center">
-      <div class="container mx-auto px-4 text-center">
+    <main class="flex-grow flex items-center relative z-10">
+      <div class="container mx-auto px-4 text-center text-white">
         <div class="floating-element mb-8">
-          <i
-            class="fas fa-prescription-bottle-alt text-white text-6xl opacity-80"
-          ></i>
+          <i class="fas fa-prescription-bottle-alt text-6xl opacity-80"></i>
         </div>
         <h2 class="text-4xl md:text-5xl font-bold mb-6">
           AI-Powered Digital Pharmacy
@@ -146,7 +147,7 @@
 
     <!-- Footer -->
     <footer
-      class="container mx-auto px-4 py-8 text-center opacity-80 text-white"
+      class="container mx-auto px-4 py-8 text-center opacity-80 text-white relative z-10"
     >
       <p>© 2023 FLUX-Rx. All rights reserved.</p>
     </footer>
